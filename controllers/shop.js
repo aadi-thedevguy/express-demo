@@ -1,21 +1,53 @@
+const Product = require('../models/product');
 
-const path = require('path');
-const rootDir = require('../util/path');
+exports.getProducts = (req, res, next) => {
+  Product.fetchAll(products => {
+    res.render('shop/product-list', {
+      prods: products,
+      pageTitle: 'All Products',
+      path: '/products'
+    });
+  });
+};
 
-const showHomePage =  (req, res) => {
-    res.sendFile(path.join(rootDir, 'views', 'shop.html'));
-  }
-  
-const showContactPage = (req, res, next) => {
-    res.sendFile(path.join(rootDir, 'views', 'contact-us.html'));
-  }
-  
-const showSuccessPage = (req, res, next) => {
-    res.sendFile(path.join(rootDir, 'views', 'success.html'));
-  }
+exports.getProduct = (req, res, next) => {
+  const prodId = req.params.productId;
+  Product.findById(prodId, product => {
+    res.render('shop/product-detail', {
+      product: product,
+      pageTitle: product.title,
+      path: '/products'
+    });
+  });
+};
 
-module.exports = {
-    showHomePage,
-    showContactPage,
-    showSuccessPage
-}
+exports.getIndex = (req, res, next) => {
+  Product.fetchAll(products => {
+    res.render('shop/index', {
+      prods: products,
+      pageTitle: 'Shop',
+      path: '/'
+    });
+  });
+};
+
+exports.getCart = (req, res, next) => {
+  res.render('shop/cart', {
+    path: '/cart',
+    pageTitle: 'Your Cart'
+  });
+};
+
+exports.getOrders = (req, res, next) => {
+  res.render('shop/orders', {
+    path: '/orders',
+    pageTitle: 'Your Orders'
+  });
+};
+
+exports.getCheckout = (req, res, next) => {
+  res.render('shop/checkout', {
+    path: '/checkout',
+    pageTitle: 'Checkout'
+  });
+};
